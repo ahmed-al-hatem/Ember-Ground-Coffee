@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ember & Ground — Small-Batch Specialty Coffee, London</title>
+  <meta name="description" content="Ember & Ground is an independent specialty coffee roastery in East London. Small-batch roasted, carefully sourced, honestly served." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       1. RESET
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+      font: inherit;
+      background: none;
+      border: none;
+    }
+
+    /* ============================================================
+       2. VARIABLES
+    ============================================================ */
+    :root {
+      /* ── Canvas & Surfaces ── */
+      --color-obsidian:       #0e1311;
+      --color-ash-charcoal:   #1a1a1a;
+      --color-graphite:       #2a2a2a;
+      --color-pure-black:     #000000;
+
+      /* ── Text ── */
+      --color-bone:           #ffffff;
+      --color-silver:         #b3b3b3;
+      --color-graphite-text:  #666666;
+
+      /* ── Light / Inverted Surfaces ── */
+      --color-linen:          #f6f7f2;
+      --color-sand-khaki:     #dfdbca;
+
+      /* ── Brand Accents ── */
+      --color-ember:          #c0502a;
+      --color-antique-gold:   #cfa53b;
+      --color-citron:         #faf080;
+      --color-lichen-green:   #cadcac;
+      --color-olive-bark:     #4d4a31;
+
+      /* ── Typography ── */
+      --font-serif: 'Cormorant Garamond', ui-serif, Georgia, 'Times New Roman', serif;
+      --font-sans:  'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+      /* ── Type Scale ── */
+      --text-caption:     0.6875rem;  /* 11px */
+      --text-small:       0.75rem;    /* 12px */
+      --text-body:        1rem;       /* 16px */
+      --text-subheading:  1.125rem;   /* 18px */
+      --text-heading-sm:  1.3125rem;  /* 21px */
+      --text-heading:     1.875rem;   /* 30px */
+      --text-heading-lg:  2.25rem;    /* 36px */
+      --text-display:     2.625rem;   /* 42px */
+
+      /* ── Line Heights ── */
+      --leading-tight:    1.15;
+      --leading-snug:     1.25;
+      --leading-normal:   1.4;
+      --leading-relaxed:  1.6;
+
+      /* ── Font Weights ── */
+      --weight-light:    300;
+      --weight-regular:  400;
+      --weight-medium:   500;
+
+      /* ── Spacing (8px base) ── */
+      --space-1:    4px;
+      --space-2:    8px;
+      --space-3:    12px;
+      --space-4:    16px;
+      --space-5:    20px;
+      --space-6:    24px;
+      --space-8:    32px;
+      --space-10:   40px;
+      --space-12:   48px;
+      --space-16:   64px;
+      --space-20:   80px;
+      --space-24:   96px;
+      --space-40:   160px;
+
+      /* ── Layout ── */
+      --max-width:    1320px;
+      --gutter:       clamp(1rem, 4vw, 3rem);
+      --section-gap:  var(--space-20);
+      --card-padding: var(--space-5);
+
+      /* ── Border Radius ── */
+      --radius-sm:      4px;
+      --radius-full:    60px;
+      --radius-circle:  9999px;
+
+      /* ── Shadows ── */
+      --shadow-card:  rgba(0, 0, 0, 0.06) 0px 2px 12px -3px;
+      --shadow-lift:  rgba(0, 0, 0, 0.18) 0px 8px 24px -6px;
+    }
+
+    /* ============================================================
+       3. BASE
+    ============================================================ */
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--color-obsidian);
+      color: var(--color-bone);
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-regular);
+      line-height: var(--leading-relaxed);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: var(--weight-regular);
+      line-height: var(--leading-snug);
+      color: var(--color-bone);
+    }
+
+    h1 { font-size: var(--text-display); font-weight: var(--weight-light); line-height: var(--leading-tight); }
+    h2 { font-size: var(--text-heading-lg); }
+    h3 { font-size: var(--text-heading-sm); }
+    h4 { font-size: var(--text-subheading); }
+
+    p {
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ============================================================
+       4. LAYOUT
+    ============================================================ */
+    .wrapper {
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .section {
+      padding-block: var(--section-gap);
+    }
+
+    /* ============================================================
+       5. COMPONENTS
+    ============================================================ */
+
+    /* — Primary Button — */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-8);
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bone);
+      background-color: var(--color-pure-black);
+      border: 1px solid var(--color-ash-charcoal);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background-color: var(--color-ash-charcoal);
+      border-color: var(--color-bone);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    /* — Ghost Button — */
+    .btn--ghost {
+      background-color: transparent;
+      border-color: var(--color-sand-khaki);
+    }
+
+    .btn--ghost:hover {
+      background-color: transparent;
+      border-color: var(--color-bone);
+    }
+
+    /* — Editorial Link (typographic CTA) — */
+    .link-editorial {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-subheading);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      display: inline-block;
+    }
+
+    .link-editorial:hover {
+      color: var(--color-silver);
+      text-decoration: underline;
+    }
+
+    .link-editorial:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    /* — Nav Link — */
+    .nav-link {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bone);
+      text-decoration: none;
+      padding-block: var(--space-1);
+    }
+
+    .nav-link:hover {
+      color: var(--color-silver);
+      text-decoration: underline;
+    }
+
+    .nav-link:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    /* — Badge — */
+    .badge {
+      display: inline-block;
+      padding: var(--space-1) var(--space-2);
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-obsidian);
+      background-color: var(--color-lichen-green);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .badge--new {
+      background-color: var(--color-citron);
+    }
+
+    .badge--special {
+      background-color: var(--color-linen);
+      border: 1px solid var(--color-antique-gold);
+    }
+
+    /* — Price Pill — */
+    .price-pill {
+      display: inline-block;
+      padding: var(--space-1) var(--space-4);
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-obsidian);
+      background-color: var(--color-linen);
+      border-radius: var(--radius-full);
+    }
+
+    /* — Product Card — */
+    .card {
+      background-color: var(--color-graphite);
+      border: 1px solid var(--color-ash-charcoal);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lift);
+    }
+
+    .card__image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+      padding: var(--card-padding);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      flex: 1;
+    }
+
+    .card__name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-sm);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      line-height: var(--leading-snug);
+    }
+
+    .card__desc {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-relaxed);
+      flex: 1;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-top: var(--space-3);
+    }
+
+    /* — Testimonial Card — */
+    .testimonial-card {
+      background-color: var(--color-ash-charcoal);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-sm);
+      padding: var(--space-8);
+    }
+
+    .testimonial-card__quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-sm);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      line-height: var(--leading-normal);
+      margin-bottom: var(--space-6);
+    }
+
+    .testimonial-card__quote::before {
+      content: '\201C';
+    }
+
+    .testimonial-card__quote::after {
+      content: '\201D';
+    }
+
+    .testimonial-card__attr {
+      font-family: var(--font-sans);
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ============================================================
+       6. SECTIONS
+    ============================================================ */
+
+    /* ── Section 1: Announcement Bar ── */
+    .announcement {
+      background-color: var(--color-olive-bark);
+      padding-block: var(--space-2);
+      text-align: center;
+    }
+
+    .announcement__text {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-linen);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .announcement__link {
+      color: var(--color-citron);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .announcement__link:hover {
+      color: var(--color-bone);
+    }
+
+    /* ── Section 2: Navigation ── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .site-nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+      padding-block: var(--space-4);
+    }
+
+    .site-nav__logo {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-subheading);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .site-nav__logo:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    .site-nav__links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .site-nav__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      flex-shrink: 0;
+    }
+
+    /* CSS-only mobile nav */
+    .nav-toggle {
+      display: none;
+    }
+
+    .nav-toggle-label {
+      display: none;
+      cursor: pointer;
+      padding: var(--space-2);
+      color: var(--color-bone);
+    }
+
+    .nav-toggle-label:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    /* Hamburger icon SVG inside label */
+    .nav-toggle-label svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    /* ── Section 3: Hero ── */
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      grid-template-columns: 35% 1fr;
+      align-items: stretch;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    /* Left: typographic index */
+    .hero__index {
+      padding-block: var(--space-20);
+      padding-inline: var(--gutter);
+      padding-left: max(var(--gutter), calc((100vw - var(--max-width)) / 2 + var(--gutter)));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--color-ash-charcoal);
+      z-index: 1;
+    }
+
+    .hero__brand-heading {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-display);
+      font-weight: var(--weight-light);
+      color: var(--color-bone);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-12);
+    }
+
+    .hero__label {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-10);
+    }
+
+    .hero__entries {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-10);
+    }
+
+    .hero__entry {}
+
+    .hero__entry-name {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-sm);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      line-height: var(--leading-snug);
+      margin-bottom: var(--space-2);
+    }
+
+    .hero__entry-sub {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-normal);
+    }
+
+    .hero__entry:hover .hero__entry-name {
+      color: var(--color-silver);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .hero__entry:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 4px;
+    }
+
+    /* Right: visual */
+    .hero__visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: var(--color-pure-black);
+    }
+
+    /* placeholder CSS removed — now uses real img */
+
+    /* ── Section 4: Manifesto ── */
+    .manifesto {
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .manifesto__inner {
+      max-width: 800px;
+    }
+
+    .manifesto__label {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-6);
+      display: block;
+    }
+
+    .manifesto__text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-lg);
+      font-weight: var(--weight-light);
+      color: var(--color-bone);
+      line-height: 1.2;
+    }
+
+    /* ── Section 5: Featured Menu ── */
+    .menu {
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .menu__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-12);
+    }
+
+    .menu__title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-lg);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+    }
+
+    .menu__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
+    }
+
+    /* ── Section 6: Story / Why Us ── */
+    .story {
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .story__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+      align-items: center;
+    }
+
+    .story__narrative {}
+
+    .story__label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-6);
+    }
+
+    .story__heading {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-lg);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      margin-bottom: var(--space-6);
+      line-height: var(--leading-snug);
+    }
+
+    .story__body {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-8);
+    }
+
+    .story__values {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .story__value {}
+
+    .story__value-title {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bone);
+      margin-bottom: var(--space-2);
+    }
+
+    .story__value-text {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-relaxed);
+    }
+
+    .story__divider {
+      width: 32px;
+      height: 1px;
+      background-color: var(--color-sand-khaki);
+      margin-bottom: var(--space-6);
+    }
+
+    /* Story image */
+    .story__image {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--color-ash-charcoal);
+    }
+
+    /* ── Section 7: Testimonials ── */
+    .testimonials {
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .testimonials__header {
+      margin-bottom: var(--space-12);
+    }
+
+    .testimonials__label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-4);
+    }
+
+    .testimonials__heading {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-lg);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+    }
+
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
+    }
+
+    /* ── Section 8: Visit Us / Hours ── */
+    .visit {
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .visit__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+      align-items: start;
+    }
+
+    .visit__info {}
+
+    .visit__label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-6);
+    }
+
+    .visit__heading {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-heading-lg);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      margin-bottom: var(--space-6);
+    }
+
+    .visit__address {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-8);
+    }
+
+    .visit__hours {}
+
+    .visit__hours-heading {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bone);
+      margin-bottom: var(--space-4);
+    }
+
+    .visit__hours-list {}
+
+    .visit__hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      padding-block: var(--space-2);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .visit__hours-row:last-child {
+      border-bottom: none;
+    }
+
+    .visit__hours-day {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+    }
+
+    .visit__hours-time {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bone);
+    }
+
+    /* Visit image */
+    .visit__map {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--color-ash-charcoal);
+    }
+
+    /* ── Section 9: Final CTA ── */
+    .final-cta {
+      background-color: var(--color-pure-black);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+      text-align: center;
+    }
+
+    .final-cta__inner {
+      max-width: 700px;
+      margin-inline: auto;
+    }
+
+    .final-cta__label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-6);
+    }
+
+    .final-cta__heading {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-display);
+      font-weight: var(--weight-light);
+      color: var(--color-bone);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-6);
+    }
+
+    .final-cta__body {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-10);
+    }
+
+    .final-cta__actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    /* ── Section 10: Footer ── */
+    .footer {
+      background-color: var(--color-pure-black);
+      padding-block: var(--space-12);
+      border-top: 1px solid var(--color-ash-charcoal);
+    }
+
+    .footer__inner {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: start;
+      gap: var(--space-12);
+    }
+
+    .footer__brand {}
+
+    .footer__logo {
+      display: block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: var(--text-subheading);
+      font-weight: var(--weight-regular);
+      color: var(--color-bone);
+      margin-bottom: var(--space-3);
+    }
+
+    .footer__tagline {
+      font-family: var(--font-sans);
+      font-size: var(--text-small);
+      color: var(--color-silver);
+    }
+
+    .footer__nav {}
+
+    .footer__nav-heading {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .footer__nav-link {
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      color: var(--color-silver);
+      text-decoration: none;
+    }
+
+    .footer__nav-link:hover {
+      color: var(--color-bone);
+    }
+
+    .footer__nav-link:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    .footer__social {}
+
+    .footer__social-heading {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-medium);
+      color: var(--color-silver);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__social-links {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    .footer__social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--color-ash-charcoal);
+      border-radius: var(--radius-sm);
+      color: var(--color-silver);
+    }
+
+    .footer__social-link:hover {
+      border-color: var(--color-bone);
+      color: var(--color-bone);
+    }
+
+    .footer__social-link:focus-visible {
+      outline: 2px solid var(--color-bone);
+      outline-offset: 3px;
+    }
+
+    .footer__bottom {
+      margin-top: var(--space-12);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-ash-charcoal);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .footer__legal {
+      font-family: var(--font-sans);
+      font-size: var(--text-small);
+      color: var(--color-graphite-text);
+    }
+
+    /* ── Hero image ── */
+    .hero__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* ── Card image ── */
+    .card__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 400ms ease;
+    }
+
+    .card:hover .card__photo {
+      transform: scale(1.04);
+    }
+
+    /* ── Story image ── */
+    .story__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Visit image ── */
+    .visit__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* ============================================================
+       7. MOTION
+    ============================================================ */
+    .btn,
+    .btn--ghost {
+      transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+    }
+
+    .nav-link,
+    .link-editorial,
+    .footer__nav-link,
+    .footer__social-link {
+      transition: color 180ms ease;
+    }
+
+    .card {
+      transition: transform 240ms ease, box-shadow 240ms ease;
+    }
+
+    .hero__entry-name {
+      transition: color 180ms ease;
+    }
+
+    .announcement__link {
+      transition: color 180ms ease;
+    }
+
+    .footer__social-link {
+      transition: color 180ms ease, border-color 180ms ease;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================================================
+       8. RESPONSIVE
+    ============================================================ */
+
+    /* ── ≥ 1024px: Full layout (default above is already desktop) ── */
+
+    /* ── < 1024px ── */
+    @media (max-width: 1023px) {
+      h1 { font-size: var(--text-heading-lg); }
+      .hero__brand-heading { font-size: var(--text-heading-lg); }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero__index {
+        padding-left: var(--gutter);
+        border-right: none;
+        border-bottom: 1px solid var(--color-ash-charcoal);
+        padding-block: var(--space-12);
+      }
+
+      .hero__visual {
+        min-height: 50vw;
+      }
+
+      .menu__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .story__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .story__image {
+        aspect-ratio: 16 / 9;
+        order: -1;
+      }
+
+      .visit__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .visit__map {
+        aspect-ratio: 16 / 9;
+      }
+
+      .final-cta__heading {
+        font-size: var(--text-heading-lg);
+      }
+
+      .footer__inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer__brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* ── < 768px ── */
+    @media (max-width: 767px) {
+      :root {
+        --section-gap: var(--space-12);
+      }
+
+      h2 { font-size: var(--text-heading); }
+
+      /* Mobile nav */
+      .nav-toggle-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .site-nav__links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--color-obsidian);
+        border-bottom: 1px solid var(--color-ash-charcoal);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: var(--space-4) var(--gutter);
+      }
+
+      .site-nav__links .nav-link {
+        width: 100%;
+        padding-block: var(--space-3);
+        border-bottom: 1px solid var(--color-ash-charcoal);
+      }
+
+      .site-nav__links .nav-link:last-child {
+        border-bottom: none;
+      }
+
+      /* Show links when toggle is checked */
+      .nav-toggle:checked ~ .site-nav__inner .site-nav__links {
+        display: flex;
+      }
+
+      .site-nav {
+        position: relative;
+      }
+
+      /* Change hamburger to close icon when open */
+      .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-menu {
+        display: none;
+      }
+
+      .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-close {
+        display: block;
+      }
+
+      .nav-toggle-label .icon-close {
+        display: none;
+      }
+
+      .site-nav__actions .btn {
+        display: none;
+      }
+
+      .menu__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonials__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__entry-name {
+        font-size: var(--text-body);
+      }
+
+      .manifesto__text {
+        font-size: var(--text-heading);
+      }
+
+      .final-cta__heading {
+        font-size: var(--text-heading);
+      }
+
+      .footer__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .footer__bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* ── < 480px ── */
+    @media (max-width: 479px) {
+      h2 { font-size: var(--text-heading-sm); }
+      .hero__brand-heading { font-size: var(--text-heading); }
+
+      .manifesto__text {
+        font-size: var(--text-heading-sm);
+      }
+
+      .final-cta__heading {
+        font-size: var(--text-heading-sm);
+      }
+
+      .hero__label {
+        display: none;
+      }
+
+      .hero__entries {
+        gap: var(--space-8);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       SECTION 1: Announcement Bar
+  ============================================================ -->
+  <div class="announcement" role="banner" aria-label="Site announcement">
+    <div class="wrapper">
+      <p class="announcement__text">
+        Free UK shipping on orders over £35 — <a class="announcement__link" href="#menu">Shop the seasonal harvest →</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 2: Primary Navigation
+  ============================================================ -->
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true" />
+  <header class="site-nav" role="banner">
+    <div class="wrapper site-nav__inner">
+
+      <!-- Logo -->
+      <a href="#" class="site-nav__logo" aria-label="Ember & Ground — Home">
+        Ember &amp; Ground
+      </a>
+
+      <!-- Nav links -->
+      <nav class="site-nav__links" aria-label="Primary navigation">
+        <a class="nav-link" href="#menu">Our Coffee</a>
+        <a class="nav-link" href="#story">Our Story</a>
+        <a class="nav-link" href="#visit">Visit Us</a>
+        <a class="nav-link" href="#menu">Shop</a>
+      </nav>
+
+      <!-- Utility actions -->
+      <div class="site-nav__actions">
+        <!-- Search icon (icon-only — aria-label required) -->
+        <a href="#" aria-label="Search" class="nav-link" style="display:flex;align-items:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="17" y1="17" x2="22" y2="22"/>
+          </svg>
+        </a>
+        <a class="btn" href="#menu">Order Now</a>
+
+        <!-- Mobile hamburger label -->
+        <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
+          <!-- icon-menu: shown when nav is closed -->
+          <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <!-- icon-close: shown when nav is open -->
+          <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </label>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============================================================
+         SECTION 3: Hero
+    ============================================================ -->
+    <section class="hero" aria-label="Hero — featured offerings">
+
+      <!-- Left: editorial index -->
+      <div class="hero__index">
+        <h1 class="hero__brand-heading">Ember &amp; Ground</h1>
+        <span class="hero__label">Featured this season</span>
+
+        <ul class="hero__entries" role="list">
+
+          <li class="hero__entry">
+            <a href="#menu" class="hero__entry-link" style="text-decoration:none;" aria-label="Origin Series — Shop Now">
+              <span class="hero__entry-name">Origin Series</span>
+              <span class="hero__entry-sub">Shop Now &rarr;</span>
+            </a>
+          </li>
+
+          <li class="hero__entry">
+            <a href="#menu" class="hero__entry-link" style="text-decoration:none;" aria-label="Seasonal Filter — Limited Time Offer">
+              <span class="badge badge--new" style="margin-bottom: var(--space-2);">New Release</span>
+              <span class="hero__entry-name" style="display:block;">Seasonal Filter</span>
+              <span class="hero__entry-sub">Limited Time Offer</span>
+            </a>
+          </li>
+
+          <li class="hero__entry">
+            <a href="#menu" class="hero__entry-link" style="text-decoration:none;" aria-label="Signature Espresso — Explore Blends">
+              <span class="hero__entry-name">Signature Espresso</span>
+              <span class="hero__entry-sub">Explore Blends &rarr;</span>
+            </a>
+          </li>
+
+          <li class="hero__entry">
+            <a href="#menu" class="hero__entry-link" style="text-decoration:none;" aria-label="Cold Brew Concentrate — Order Online">
+              <span class="badge badge--special" style="margin-bottom: var(--space-2);">Small Batch</span>
+              <span class="hero__entry-name" style="display:block;">Cold Brew Concentrate</span>
+              <span class="hero__entry-sub">Order Online &rarr;</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <!-- Right: product visual -->
+      <div class="hero__visual">
+        <img
+          src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=1400&auto=format&fit=crop&crop=center&q=85"
+          alt="A rich espresso shot being extracted from a professional machine, dark dramatic studio lighting"
+          class="hero__photo"
+        />
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         SECTION 4: Manifesto
+    ============================================================ -->
+    <section class="manifesto section" id="about" aria-labelledby="manifesto-text">
+      <div class="wrapper">
+        <div class="manifesto__inner">
+          <span class="manifesto__label">Our philosophy</span>
+          <p class="manifesto__text" id="manifesto-text">
+            Independent specialty roasters based in East London. We source from farmers who care — single origins, traceable lots, honest relationships. Every cup is the result of a choice made long before the kettle boils.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5: Featured Menu
+    ============================================================ -->
+    <section class="menu section" id="menu" aria-labelledby="menu-heading">
+      <div class="wrapper">
+
+        <div class="menu__header">
+          <h2 class="menu__title" id="menu-heading">What's in the bag</h2>
+          <a class="btn btn--ghost" href="#">See full menu</a>
+        </div>
+
+        <ul class="menu__grid" role="list">
+
+          <!-- Card 1: Origin Espresso -->
+          <li class="card" style="list-style:none;">
+            <div class="card__image" aria-hidden="true">
+              <img
+                src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=800&auto=format&fit=crop&q=80"
+                alt="Rich dark espresso shot in a small ceramic cup, dark moody studio lighting"
+                class="card__photo"
+              />
+            </div>
+            <div class="card__body">
+              <div>
+                <span class="badge">Single Origin</span>
+              </div>
+              <h3 class="card__name">Yirgacheffe Naturale</h3>
+              <p class="card__desc">Sun-dried on raised beds at 2,100 metres. Deep blackberry and dark chocolate with a wild, wine-forward finish that lingers long after the last sip.</p>
+              <div class="card__footer">
+                <span class="price-pill">From — £14.00</span>
+                <a class="link-editorial" href="#" aria-label="Order Yirgacheffe Naturale">Order →</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Card 2: Filter Blend -->
+          <li class="card" style="list-style:none;">
+            <div class="card__image" aria-hidden="true">
+              <img
+                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80"
+                alt="A pour-over V60 filter coffee being brewed, steam rising over a dark surface"
+                class="card__photo"
+              />
+            </div>
+            <div class="card__body">
+              <div>
+                <span class="badge badge--new">New Release</span>
+              </div>
+              <h3 class="card__name">Seasonal Filter Blend</h3>
+              <p class="card__desc">A rotating three-origin blend built for pour-over and batch brew. Stone fruit, raw honey, and clean citrus — bright without being sharp.</p>
+              <div class="card__footer">
+                <span class="price-pill">From — £12.50</span>
+                <a class="link-editorial" href="#" aria-label="Order Seasonal Filter Blend">Order →</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Card 3: Cold Brew Concentrate -->
+          <li class="card" style="list-style:none;">
+            <div class="card__image" aria-hidden="true">
+              <img
+                src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&auto=format&fit=crop&q=80"
+                alt="Cold brew coffee in a glass jar with ice, dark background"
+                class="card__photo"
+              />
+            </div>
+            <div class="card__body">
+              <div>
+                <span class="badge badge--special">Small Batch</span>
+              </div>
+              <h3 class="card__name">Cold Brew Concentrate</h3>
+              <p class="card__desc">Steeped for 18 hours in filtered water. Serve over ice diluted 1:1, or straight from the bottle if you mean business. Smooth, bold, unapologetic.</p>
+              <div class="card__footer">
+                <span class="price-pill">From — £9.00</span>
+                <a class="link-editorial" href="#" aria-label="Order Cold Brew Concentrate">Order →</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Card 4: Signature Espresso Blend -->
+          <li class="card" style="list-style:none;">
+            <div class="card__image" aria-hidden="true">
+              <img
+                src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&auto=format&fit=crop&q=80"
+                alt="Specialty coffee beans in a roasting tray, warm amber tones"
+                class="card__photo"
+              />
+            </div>
+            <div class="card__body">
+              <div>
+                <span class="badge">House Blend</span>
+              </div>
+              <h3 class="card__name">House Espresso</h3>
+              <p class="card__desc">Our anchor blend. Two origins locked together — a Brazilian base for body and sweetness, an Ethiopian top note for brightness. Dialled for 9-bar extraction, forgiving in milk.</p>
+              <div class="card__footer">
+                <span class="price-pill">From — £11.00</span>
+                <a class="link-editorial" href="#" aria-label="Order House Espresso">Order →</a>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6: Story / Why Us
+    ============================================================ -->
+    <section class="story section" id="story" aria-labelledby="story-heading">
+      <div class="wrapper">
+        <div class="story__inner">
+
+          <!-- Left: narrative -->
+          <div class="story__narrative">
+            <span class="story__label">The roastery</span>
+            <h2 class="story__heading" id="story-heading">Small-batch, by conviction</h2>
+            <p class="story__body">
+              We started Ember & Ground in 2018 in a railway arch in Hackney Wick. The premise was simple: roast less, roast better. Source directly where we can, work with importers we trust where we can't. Keep the batches small enough that we notice when something changes — and keep changing it until it's right.
+            </p>
+            <p class="story__body">
+              We roast on a 15-kilo drum roaster, which means every batch takes our full attention. There's no coasting on automation here. The result is coffee with a clear point of view — not safe, not generic, not designed by committee.
+            </p>
+            <a class="btn btn--ghost" href="#" style="margin-top: var(--space-2);">Read the full story</a>
+
+            <!-- Three values -->
+            <div class="story__values" style="margin-top: var(--space-12);">
+
+              <div class="story__value">
+                <div class="story__divider"></div>
+                <p class="story__value-title">Direct relationships</p>
+                <p class="story__value-text">We visit every farm we work with. We pay above Fair Trade minimums because the price of coffee doesn't reflect the labour that grows it.</p>
+              </div>
+
+              <div class="story__value">
+                <div class="story__divider"></div>
+                <p class="story__value-title">Transparent roasting</p>
+                <p class="story__value-text">Every bag ships with a roast date and full origin notes. We don't hide roast profiles behind marketing language — the data is yours.</p>
+              </div>
+
+              <div class="story__value">
+                <div class="story__divider"></div>
+                <p class="story__value-title">Zero compromise on green</p>
+                <p class="story__value-text">We reject lots that don't meet our cup score threshold. We'd rather have gaps in our range than fill them with coffee we can't stand behind.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: roastery image -->
+          <div class="story__image">
+            <img
+              src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?w=900&auto=format&fit=crop&q=85"
+              alt="Inside a specialty coffee roastery — a large drum roaster glowing with heat in a warmly lit industrial space"
+              class="story__photo"
+            />
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 7: Testimonials
+    ============================================================ -->
+    <section class="testimonials section" id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="wrapper">
+
+        <div class="testimonials__header">
+          <span class="testimonials__label">What people say</span>
+          <h2 class="testimonials__heading" id="testimonials-heading">From the regulars</h2>
+        </div>
+
+        <div class="testimonials__grid" role="list">
+
+          <article class="testimonial-card" role="listitem">
+            <blockquote>
+              <p class="testimonial-card__quote">
+                The Yirgacheffe changed how I think about espresso. I'd been drinking dark blends for a decade — this opened a door I didn't know was there.
+              </p>
+              <footer>
+                <cite class="testimonial-card__attr">Marcus H. — Hackney, London</cite>
+              </footer>
+            </blockquote>
+          </article>
+
+          <article class="testimonial-card" role="listitem">
+            <blockquote>
+              <p class="testimonial-card__quote">
+                I've ordered from a dozen specialty roasters in the UK. Ember & Ground is the only one where the coffee actually tastes the way the tasting notes describe it.
+              </p>
+              <footer>
+                <cite class="testimonial-card__attr">Priya N. — Edinburgh</cite>
+              </footer>
+            </blockquote>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 8: Visit Us / Hours
+    ============================================================ -->
+    <section class="visit section" id="visit" aria-labelledby="visit-heading">
+      <div class="wrapper">
+        <div class="visit__inner">
+
+          <!-- Left: info -->
+          <div class="visit__info">
+            <span class="visit__label">Come find us</span>
+            <h2 class="visit__heading" id="visit-heading">The roastery is open</h2>
+
+            <address class="visit__address" style="font-style: normal;">
+              12 Roach Road<br/>
+              Hackney Wick<br/>
+              London, E3 2PA<br/>
+              <br/>
+              <a href="tel:+442071234567" class="footer__nav-link" style="text-decoration:underline;">+44 (0) 20 7123 4567</a><br/>
+              <a href="mailto:hello@emberandground.co.uk" class="footer__nav-link" style="text-decoration:underline;">hello@emberandground.co.uk</a>
+            </address>
+
+            <div class="visit__hours">
+              <p class="visit__hours-heading">Opening hours</p>
+              <ul class="visit__hours-list" aria-label="Opening hours">
+                <li class="visit__hours-row">
+                  <span class="visit__hours-day">Monday – Friday</span>
+                  <span class="visit__hours-time">7:30 am – 5:00 pm</span>
+                </li>
+                <li class="visit__hours-row">
+                  <span class="visit__hours-day">Saturday</span>
+                  <span class="visit__hours-time">8:00 am – 4:00 pm</span>
+                </li>
+                <li class="visit__hours-row">
+                  <span class="visit__hours-day">Sunday</span>
+                  <span class="visit__hours-time">9:00 am – 2:00 pm</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right: café/location image -->
+          <div class="visit__map" aria-label="Ember and Ground roastery café in Hackney Wick, London">
+            <img
+              src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&auto=format&fit=crop&q=85"
+              alt="A cosy specialty coffee café interior — warm lighting, exposed brick, wooden surfaces"
+              class="visit__photo"
+            />
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 9: Final CTA
+    ============================================================ -->
+    <section class="final-cta section" id="order" aria-labelledby="cta-heading">
+      <div class="wrapper">
+        <div class="final-cta__inner">
+          <span class="final-cta__label">Ready when you are</span>
+          <h2 class="final-cta__heading" id="cta-heading">
+            Your next great cup starts here
+          </h2>
+          <p class="final-cta__body">
+            Roasted to order and shipped within 48 hours. Every bag carries a full origin story, a roast date, and brewing guidance written by the people who actually made it.
+          </p>
+          <div class="final-cta__actions">
+            <a class="btn" href="#menu">Order Coffee</a>
+            <a class="btn btn--ghost" href="#visit">Visit the Roastery</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       SECTION 10: Footer
+  ============================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="wrapper">
+
+      <div class="footer__inner">
+
+        <!-- Brand -->
+        <div class="footer__brand">
+          <a href="#" class="footer__logo" aria-label="Ember & Ground — Home">Ember &amp; Ground</a>
+          <p class="footer__tagline">Small-batch roasted. Carefully sourced. Honestly served.</p>
+        </div>
+
+        <!-- Nav -->
+        <nav class="footer__nav" aria-label="Footer navigation">
+          <p class="footer__nav-heading">Navigate</p>
+          <ul class="footer__nav-list">
+            <li><a href="#menu" class="footer__nav-link">Our Coffee</a></li>
+            <li><a href="#story" class="footer__nav-link">Our Story</a></li>
+            <li><a href="#visit" class="footer__nav-link">Visit Us</a></li>
+            <li><a href="#order" class="footer__nav-link">Order Online</a></li>
+          </ul>
+        </nav>
+
+        <!-- Social -->
+        <div class="footer__social">
+          <p class="footer__social-heading">Follow</p>
+          <div class="footer__social-links">
+
+            <!-- Instagram -->
+            <a href="#" class="footer__social-link" aria-label="Ember & Ground on Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <rect x="2" y="2" width="20" height="20" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+
+            <!-- Twitter / X -->
+            <a href="#" class="footer__social-link" aria-label="Ember & Ground on X (Twitter)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+
+            <!-- Email / Newsletter -->
+            <a href="mailto:hello@emberandground.co.uk" class="footer__social-link" aria-label="Email Ember & Ground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <polyline points="2,4 12,13 22,4"/>
+              </svg>
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="footer__bottom">
+        <p class="footer__legal">&copy; 2026 Ember &amp; Ground Ltd. All rights reserved.</p>
+        <p class="footer__legal">
+          <a href="#" class="footer__nav-link">Privacy Policy</a>
+          &nbsp;·&nbsp;
+          <a href="#" class="footer__nav-link">Terms of Use</a>
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
