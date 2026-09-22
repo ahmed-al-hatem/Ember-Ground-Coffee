@@ -42,6 +42,8 @@
 
     /* ============================================================
        2. VARIABLES
+       --section-gap starts at mobile value (48px).
+       Promoted to 80px at min-width: 768px.
     ============================================================ */
     :root {
       /* ── Canvas & Surfaces ── */
@@ -109,7 +111,8 @@
       /* ── Layout ── */
       --max-width:    1320px;
       --gutter:       clamp(1rem, 4vw, 3rem);
-      --section-gap:  var(--space-20);
+      /* Mobile-first: 48px on small screens, 80px from 768px up */
+      --section-gap:  var(--space-12);
       --card-padding: var(--space-5);
 
       /* ── Border Radius ── */
@@ -124,6 +127,8 @@
 
     /* ============================================================
        3. BASE
+       Font sizes are mobile-first (smallest value as default).
+       They scale up via min-width queries below.
     ============================================================ */
     html {
       font-size: 16px;
@@ -150,8 +155,9 @@
       color: var(--color-bone);
     }
 
-    h1 { font-size: var(--text-display); font-weight: var(--weight-light); line-height: var(--leading-tight); }
-    h2 { font-size: var(--text-heading-lg); }
+    /* Mobile base sizes — scaled up in media queries */
+    h1 { font-size: var(--text-heading);    font-weight: var(--weight-light); line-height: var(--leading-tight); }
+    h2 { font-size: var(--text-heading-sm); }
     h3 { font-size: var(--text-heading-sm); }
     h4 { font-size: var(--text-subheading); }
 
@@ -309,9 +315,11 @@
       width: 100%;
       aspect-ratio: 4 / 3;
       flex-shrink: 0;
-      position: relative;
       overflow: hidden;
     }
+
+    /* Bug fix: missing selector — was orphaned in original */
+    .card__body {
       padding: var(--card-padding);
       display: flex;
       flex-direction: column;
@@ -410,9 +418,15 @@
       color: var(--color-bone);
     }
 
-    /* ── Section 2: Navigation ── */
+    /* ── Section 2: Navigation (Mobile-first) ── */
+    /*
+     * Base = mobile: hamburger visible, nav drawer hidden.
+     * At min-width: 768px: horizontal inline nav, hamburger hidden.
+     * position:relative on mobile so the absolute dropdown stays
+     * within the header flow; sticky promoted at 768px.
+     */
     .site-nav {
-      position: sticky;
+      position: relative;
       top: 0;
       z-index: 100;
       background-color: var(--color-obsidian);
@@ -442,10 +456,34 @@
       outline-offset: 3px;
     }
 
+    /* Mobile: nav drawer hidden by default */
     .site-nav__links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--color-obsidian);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: var(--space-4) var(--gutter);
+    }
+
+    .site-nav__links .nav-link {
+      width: 100%;
+      padding-block: var(--space-3);
+      border-bottom: 1px solid var(--color-ash-charcoal);
+    }
+
+    .site-nav__links .nav-link:last-child {
+      border-bottom: none;
+    }
+
+    /* Open drawer when checkbox is checked */
+    .nav-toggle:checked ~ .site-nav__inner .site-nav__links {
       display: flex;
-      align-items: center;
-      gap: var(--space-8);
     }
 
     .site-nav__actions {
@@ -455,13 +493,21 @@
       flex-shrink: 0;
     }
 
-    /* CSS-only mobile nav */
+    /* Mobile: "Order Now" button hidden to save header space */
+    .site-nav__actions .btn {
+      display: none;
+    }
+
+    /* CSS-only toggle — hidden input */
     .nav-toggle {
       display: none;
     }
 
+    /* Mobile: hamburger label visible */
     .nav-toggle-label {
-      display: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       padding: var(--space-2);
       color: var(--color-bone);
@@ -472,44 +518,59 @@
       outline-offset: 3px;
     }
 
-    /* Hamburger icon SVG inside label */
     .nav-toggle-label svg {
       width: 24px;
       height: 24px;
       display: block;
     }
 
-    /* ── Section 3: Hero ── */
+    /* Close icon hidden by default; shown when nav is open */
+    .nav-toggle-label .icon-close {
+      display: none;
+    }
+
+    .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-menu {
+      display: none;
+    }
+
+    .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-close {
+      display: block;
+    }
+
+    /* ── Section 3: Hero (Mobile-first) ── */
+    /*
+     * Base = single column, stacked: index panel on top, image below.
+     * min-height: auto so the stacked layout doesn't force 88vh on phones.
+     * Two-column 35%/1fr layout and 88vh min-height promoted at 1024px.
+     */
     .hero {
-      min-height: 88vh;
+      min-height: auto;
       display: grid;
-      grid-template-columns: 35% 1fr;
+      grid-template-columns: 1fr;
       align-items: stretch;
-      position: relative;
       overflow: hidden;
       border-bottom: 1px solid var(--color-ash-charcoal);
     }
 
-    /* Left: typographic index */
+    /* Mobile: index panel — full width, compact padding, no right border */
     .hero__index {
-      padding-block: var(--space-20);
+      padding-block: var(--space-12);
       padding-inline: var(--gutter);
-      padding-left: max(var(--gutter), calc((100vw - var(--max-width)) / 2 + var(--gutter)));
       display: flex;
       flex-direction: column;
       justify-content: center;
-      border-right: 1px solid var(--color-ash-charcoal);
-      z-index: 1;
+      border-bottom: 1px solid var(--color-ash-charcoal);
     }
 
     .hero__brand-heading {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: var(--text-display);
+      /* Mobile base: 30px — scaled up progressively */
+      font-size: var(--text-heading);
       font-weight: var(--weight-light);
       color: var(--color-bone);
       line-height: var(--leading-tight);
-      margin-bottom: var(--space-12);
+      margin-bottom: var(--space-8);
     }
 
     .hero__label {
@@ -519,22 +580,21 @@
       color: var(--color-silver);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: var(--space-10);
+      margin-bottom: var(--space-6);
     }
 
     .hero__entries {
       display: flex;
       flex-direction: column;
-      gap: var(--space-10);
+      gap: var(--space-8);
     }
-
-    .hero__entry {}
 
     .hero__entry-name {
       display: block;
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: var(--text-heading-sm);
+      /* Mobile: body size — slightly smaller so entries fit comfortably */
+      font-size: var(--text-body);
       font-weight: var(--weight-regular);
       color: var(--color-bone);
       line-height: var(--leading-snug);
@@ -561,7 +621,7 @@
       outline-offset: 4px;
     }
 
-    /* Right: visual */
+    /* Mobile: image panel — landscape crop, 50vw min-height so it's visible */
     .hero__visual {
       position: relative;
       display: flex;
@@ -569,9 +629,8 @@
       justify-content: center;
       overflow: hidden;
       background-color: var(--color-pure-black);
+      min-height: 50vw;
     }
-
-    /* placeholder CSS removed — now uses real img */
 
     /* ── Section 4: Manifesto ── */
     .manifesto {
@@ -597,7 +656,8 @@
     .manifesto__text {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: var(--text-heading-lg);
+      /* Mobile base: 21px — scaled up in media queries */
+      font-size: var(--text-heading-sm);
       font-weight: var(--weight-light);
       color: var(--color-bone);
       line-height: 1.2;
@@ -615,7 +675,7 @@
       justify-content: space-between;
       gap: var(--space-6);
       flex-wrap: wrap;
-      margin-bottom: var(--space-12);
+      margin-bottom: var(--space-8);
     }
 
     .menu__title {
@@ -626,9 +686,10 @@
       color: var(--color-bone);
     }
 
+    /* Mobile base: 1 column */
     .menu__grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr;
       gap: var(--space-5);
     }
 
@@ -638,14 +699,13 @@
       border-bottom: 1px solid var(--color-ash-charcoal);
     }
 
+    /* Mobile base: single column, image first (order: -1) */
     .story__inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-16);
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
       align-items: center;
     }
-
-    .story__narrative {}
 
     .story__label {
       display: block;
@@ -682,8 +742,6 @@
       gap: var(--space-6);
     }
 
-    .story__value {}
-
     .story__value-title {
       font-family: var(--font-sans);
       font-size: var(--text-body);
@@ -706,13 +764,14 @@
       margin-bottom: var(--space-6);
     }
 
-    /* Story image */
+    /* Mobile: landscape crop, image appears first */
     .story__image {
       width: 100%;
-      aspect-ratio: 3 / 4;
+      aspect-ratio: 16 / 9;
       border-radius: var(--radius-sm);
       overflow: hidden;
       border: 1px solid var(--color-ash-charcoal);
+      order: -1;
     }
 
     /* ── Section 7: Testimonials ── */
@@ -722,7 +781,7 @@
     }
 
     .testimonials__header {
-      margin-bottom: var(--space-12);
+      margin-bottom: var(--space-8);
     }
 
     .testimonials__label {
@@ -744,9 +803,10 @@
       color: var(--color-bone);
     }
 
+    /* Mobile base: 1 column */
     .testimonials__grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: var(--space-5);
     }
 
@@ -756,14 +816,13 @@
       border-bottom: 1px solid var(--color-ash-charcoal);
     }
 
+    /* Mobile base: single column */
     .visit__inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-16);
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
       align-items: start;
     }
-
-    .visit__info {}
 
     .visit__label {
       display: block;
@@ -793,8 +852,6 @@
       margin-bottom: var(--space-8);
     }
 
-    .visit__hours {}
-
     .visit__hours-heading {
       font-family: var(--font-sans);
       font-size: var(--text-body);
@@ -802,8 +859,6 @@
       color: var(--color-bone);
       margin-bottom: var(--space-4);
     }
-
-    .visit__hours-list {}
 
     .visit__hours-row {
       display: flex;
@@ -831,10 +886,10 @@
       color: var(--color-bone);
     }
 
-    /* Visit image */
+    /* Mobile: landscape crop */
     .visit__map {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 16 / 9;
       border-radius: var(--radius-sm);
       overflow: hidden;
       border: 1px solid var(--color-ash-charcoal);
@@ -866,7 +921,8 @@
     .final-cta__heading {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: var(--text-display);
+      /* Mobile base: 21px — scaled up progressively */
+      font-size: var(--text-heading-sm);
       font-weight: var(--weight-light);
       color: var(--color-bone);
       line-height: var(--leading-tight);
@@ -896,14 +952,13 @@
       border-top: 1px solid var(--color-ash-charcoal);
     }
 
+    /* Mobile base: single column stacked */
     .footer__inner {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
       align-items: start;
-      gap: var(--space-12);
     }
-
-    .footer__brand {}
 
     .footer__logo {
       display: block;
@@ -920,8 +975,6 @@
       font-size: var(--text-small);
       color: var(--color-silver);
     }
-
-    .footer__nav {}
 
     .footer__nav-heading {
       font-family: var(--font-sans);
@@ -954,8 +1007,6 @@
       outline: 2px solid var(--color-bone);
       outline-offset: 3px;
     }
-
-    .footer__social {}
 
     .footer__social-heading {
       font-family: var(--font-sans);
@@ -993,15 +1044,15 @@
       outline-offset: 3px;
     }
 
+    /* Mobile base: stacked, left-aligned */
     .footer__bottom {
-      margin-top: var(--space-12);
+      margin-top: var(--space-8);
       padding-top: var(--space-6);
       border-top: 1px solid var(--color-ash-charcoal);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
     }
 
     .footer__legal {
@@ -1010,7 +1061,7 @@
       color: var(--color-graphite-text);
     }
 
-    /* ── Hero image ── */
+    /* ── Images ── */
     .hero__photo {
       width: 100%;
       height: 100%;
@@ -1019,7 +1070,6 @@
       display: block;
     }
 
-    /* ── Card image ── */
     .card__photo {
       width: 100%;
       height: 100%;
@@ -1033,7 +1083,6 @@
       transform: scale(1.04);
     }
 
-    /* ── Story image ── */
     .story__photo {
       width: 100%;
       height: 100%;
@@ -1043,7 +1092,6 @@
       border-radius: var(--radius-sm);
     }
 
-    /* ── Visit image ── */
     .visit__photo {
       width: 100%;
       height: 100%;
@@ -1083,7 +1131,6 @@
       transition: color 180ms ease, border-color 180ms ease;
     }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         transition-duration: 0.01ms !important;
@@ -1092,181 +1139,159 @@
     }
 
     /* ============================================================
-       8. RESPONSIVE
+       8. RESPONSIVE — MOBILE FIRST
+       Breakpoints (min-width, ascending):
+         480px  — large phones / small landscape
+         768px  — tablet portrait
+        1024px  — desktop
+        1440px  — wide desktop
     ============================================================ */
 
-    /* ── ≥ 1024px: Full layout (default above is already desktop) ── */
-
-    /* ── < 1024px ── */
-    @media (max-width: 1023px) {
-      h1 { font-size: var(--text-heading-lg); }
+    /* ── ≥ 480px: Large phones ── */
+    @media (min-width: 480px) {
+      h1,
       .hero__brand-heading { font-size: var(--text-heading-lg); }
-
-      .hero {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-
-      .hero__index {
-        padding-left: var(--gutter);
-        border-right: none;
-        border-bottom: 1px solid var(--color-ash-charcoal);
-        padding-block: var(--space-12);
-      }
-
-      .hero__visual {
-        min-height: 50vw;
-      }
-
-      .menu__grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .story__inner {
-        grid-template-columns: 1fr;
-      }
-
-      .story__image {
-        aspect-ratio: 16 / 9;
-        order: -1;
-      }
-
-      .visit__inner {
-        grid-template-columns: 1fr;
-      }
-
-      .visit__map {
-        aspect-ratio: 16 / 9;
-      }
-
-      .final-cta__heading {
-        font-size: var(--text-heading-lg);
-      }
-
-      .footer__inner {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .footer__brand {
-        grid-column: 1 / -1;
-      }
-    }
-
-    /* ── < 768px ── */
-    @media (max-width: 767px) {
-      :root {
-        --section-gap: var(--space-12);
-      }
 
       h2 { font-size: var(--text-heading); }
 
-      /* Mobile nav */
-      .nav-toggle-label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      .hero__brand-heading { margin-bottom: var(--space-10); }
+
+      .hero__entries { gap: var(--space-10); }
+
+      .hero__entry-name { font-size: var(--text-heading-sm); }
+
+      .manifesto__text   { font-size: var(--text-heading); }
+
+      .final-cta__heading { font-size: var(--text-heading); }
+    }
+
+    /* ── ≥ 768px: Tablet portrait ── */
+    @media (min-width: 768px) {
+      /* Restore full section spacing */
+      :root {
+        --section-gap: var(--space-20);
+      }
+
+      h2 { font-size: var(--text-heading-lg); }
+
+      .manifesto__text    { font-size: var(--text-heading-lg); }
+      .final-cta__heading { font-size: var(--text-heading-lg); }
+
+      /* Nav: switch to sticky horizontal bar, hide hamburger */
+      .site-nav {
+        position: sticky;
       }
 
       .site-nav__links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: var(--color-obsidian);
-        border-bottom: 1px solid var(--color-ash-charcoal);
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
-        padding: var(--space-4) var(--gutter);
-      }
-
-      .site-nav__links .nav-link {
-        width: 100%;
-        padding-block: var(--space-3);
-        border-bottom: 1px solid var(--color-ash-charcoal);
-      }
-
-      .site-nav__links .nav-link:last-child {
+        display: flex;
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-8);
+        padding: 0;
+        background-color: transparent;
         border-bottom: none;
       }
 
-      /* Show links when toggle is checked */
-      .nav-toggle:checked ~ .site-nav__inner .site-nav__links {
-        display: flex;
+      /* Reset per-link mobile styles */
+      .site-nav__links .nav-link {
+        width: auto;
+        padding-block: var(--space-1);
+        border-bottom: none;
       }
 
-      .site-nav {
-        position: relative;
-      }
+      .nav-toggle-label { display: none; }
 
-      /* Change hamburger to close icon when open */
-      .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-menu {
-        display: none;
-      }
+      .site-nav__actions .btn { display: inline-flex; }
 
-      .nav-toggle:checked ~ .site-nav__inner .nav-toggle-label .icon-close {
-        display: block;
-      }
+      /* Menu: 2 columns */
+      .menu__grid { grid-template-columns: repeat(2, 1fr); }
 
-      .nav-toggle-label .icon-close {
-        display: none;
-      }
+      /* Testimonials: 2 columns */
+      .testimonials__grid { grid-template-columns: 1fr 1fr; }
+      .testimonials__header { margin-bottom: var(--space-12); }
 
-      .site-nav__actions .btn {
-        display: none;
-      }
-
-      .menu__grid {
-        grid-template-columns: 1fr;
-      }
-
-      .testimonials__grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero__entry-name {
-        font-size: var(--text-body);
-      }
-
-      .manifesto__text {
-        font-size: var(--text-heading);
-      }
-
-      .final-cta__heading {
-        font-size: var(--text-heading);
-      }
-
+      /* Footer: 2-column layout — brand spans both */
       .footer__inner {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-12);
       }
 
+      .footer__brand { grid-column: 1 / -1; }
+
+      /* Footer bottom: row layout */
       .footer__bottom {
-        flex-direction: column;
-        align-items: flex-start;
+        margin-top: var(--space-12);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
       }
     }
 
-    /* ── < 480px ── */
-    @media (max-width: 479px) {
-      h2 { font-size: var(--text-heading-sm); }
-      .hero__brand-heading { font-size: var(--text-heading); }
-
-      .manifesto__text {
-        font-size: var(--text-heading-sm);
+    /* ── ≥ 1024px: Desktop ── */
+    @media (min-width: 1024px) {
+      h1,
+      .hero__brand-heading {
+        font-size: var(--text-display);
       }
 
-      .final-cta__heading {
-        font-size: var(--text-heading-sm);
+      .hero__brand-heading { margin-bottom: var(--space-12); }
+
+      .final-cta__heading { font-size: var(--text-display); }
+
+      /* Hero: two-column split, full height */
+      .hero {
+        min-height: 88vh;
+        grid-template-columns: 35% 1fr;
       }
 
-      .hero__label {
-        display: none;
+      .hero__index {
+        padding-block: var(--space-20);
+        padding-left: max(var(--gutter), calc((100vw - var(--max-width)) / 2 + var(--gutter)));
+        border-bottom: none;
+        border-right: 1px solid var(--color-ash-charcoal);
       }
 
-      .hero__entries {
-        gap: var(--space-8);
+      /* Image panel fills column height naturally — no min-height needed */
+      .hero__visual { min-height: 0; }
+
+      /* Menu: 4 columns */
+      .menu__grid { grid-template-columns: repeat(4, 1fr); }
+      .menu__header { margin-bottom: var(--space-12); }
+
+      /* Story: two-column, portrait image, natural order */
+      .story__inner {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-16);
       }
+
+      .story__image {
+        aspect-ratio: 3 / 4;
+        order: 0;
+      }
+
+      /* Visit: two-column, square image */
+      .visit__inner {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-16);
+      }
+
+      .visit__map { aspect-ratio: 1 / 1; }
+
+      /* Footer: three-column original layout */
+      .footer__inner {
+        grid-template-columns: 1fr auto auto;
+        gap: var(--space-12);
+      }
+
+      .footer__brand { grid-column: auto; }
+    }
+
+    /* ── ≥ 1440px: Wide desktop ── */
+    @media (min-width: 1440px) {
+      /* Max-width container fully engaged — no structural changes needed,
+         fluid gutters and clamp() handle the rest. */
     }
   </style>
 </head>
